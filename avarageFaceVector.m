@@ -3,11 +3,6 @@ function [m] = avarageFaceVector(data)
 % Input: data - an array of numbers
 % Output: m - the mean value of data
 
-% Check if the input is valid
-if isempty(data) || ~isnumeric(data)
-    error('Invalid input. Data must be a non-empty numeric array.')
-end
-
 % Calculate the sum and the length of data
 sum = zeros(105000,1, 'uint64');
 len = 0;
