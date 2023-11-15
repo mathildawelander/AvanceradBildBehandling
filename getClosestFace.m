@@ -5,6 +5,6 @@ imgNumber=0;
 
 distances = pdist2(imgWeights', allWeights', 'euclidean');
 
-[minDist, index] = min(distances);
+[~, index] = min(distances);
 imgNumber= index;
 end

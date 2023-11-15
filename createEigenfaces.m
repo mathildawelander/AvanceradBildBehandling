@@ -1,9 +1,6 @@
-function [top_eigenvectors] = createEigenfaces(A)
-%UNTITLED2 Summary of this function goes here
-%   Create eigenfaces using A and return 
+function [top_eigenvectors] = createEigenfaces(A, k)
+%   Create k eigenfaces using A  
 
-%how many eigenvectors do we want
-k=5; 
 newA= A'*A;
 
 %small v 
@@ -11,7 +8,6 @@ newA= A'*A;
 u = A*eigenVector;
 
 %Choose the best eigenvectors
-% Assuming k is the number of top eigenvectors you want to keep
 [sorted_eigenvalues, index] = sort(diag(eigenValue), 'descend');
 top_eigenvectors = u(:, index(1:k));
 

@@ -3,15 +3,7 @@ function [m] = avarageFaceVector(data)
 % Input: data - an array of numbers
 % Output: m - the mean value of data
 
-% Calculate the sum and the length of data
-sum = zeros(105000,1, 'uint64');
-len = 0;
-
-for x = data
-    sum = sum + x;
-    len = len + 1;
-end
-
-% Calculate the mean value
-m = sum / len;
+ data = double(data);
+ m = sum(data(:)) / numel(data);
+ 
 end
