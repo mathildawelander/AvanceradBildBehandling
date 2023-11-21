@@ -20,8 +20,13 @@ else
 end
 %Skapa bilder på ansiktet
 face = imread(filename); % Vanlig
-face_eq = histeq(face);                         % Histogramkompenserad
+%faceBW= rgb2gray(face);
+%face_eq = histeq(face);                         % Histogramkompenserad
 %facebw = imbinarize(rgb2gray(face_eq),0.7);       % Trösklad 85%
+
+facegw= grayWorld(face);
+
+faceSeg= FaceSegmentation(facegw);
 
 co= ColorBasedMethod(face, 40);
 ed= edgeDensityMethod(face,2);
@@ -32,6 +37,8 @@ imgcoed= co & ed;
 imgiled= il & ed;
 
 imgHybrid= imgilco | imgcoed | imgiled;
+imgHybrid= faceSeg.*imgHybrid;
+imshow(imgHybrid);
 eyePos= getEyes(imgHybrid);
 
 if(eyePos(1,1)< eyePos(2,1))
@@ -44,25 +51,21 @@ end
 
 img= CropImages(face, leftEye, rightEye);
 
-
-% % imshow(face);
-% % hold on;
-% % plot(eyePos(:,1),eyePos(:,2), 'R+', 'MarkerSize',30);
-% % hold off;
 % 
 % %imshow(img);
 % figure;
 % 
 % % Display the first image in the first subplot
 % subplot(1, 2, 1);
-% %imshow(face);
+% imshow(face);
 % hold on;
 % plot(eyePos(:,1),eyePos(:,2), 'R+', 'MarkerSize',30);
 % hold off;
 % 
 % % Display the second image in the second subplot
 % subplot(1, 2, 2);
-% %imshow(img);
+% imshow(img);
+% 
 img= rgb2gray(img);
 img = uint8(img(:));
 img = img-my;
