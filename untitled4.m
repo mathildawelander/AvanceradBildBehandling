@@ -1,9 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%
 %-----Settings-----%
+addpath('EigenFaces\');
+addpath('EyeMapping\');
 load('feature_vectors.mat', 'W');
 load('eigenvectors.mat', 'top_eigenvectors');
 load('average_vector.mat', 'my');
-
 
 eyeWidth = 260;   %Distans (px) från sidan till närmsta öga horisontell längd
 eyeHeight = 150;  %Distans (px) från topp av bild till närmsta öga
