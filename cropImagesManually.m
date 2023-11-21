@@ -23,3 +23,6 @@ cropRect = [x_point, y_point, cropWidth-1, cropHeight-1];
 croppedImage = imcrop(img, cropRect);
 croppedImage= rgb2gray(croppedImage);
 imwrite(croppedImage, 'DB1Cropped\db1_17.jpg');
+
+
+for 
