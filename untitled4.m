@@ -11,15 +11,17 @@ eyeHeight = 150;  %Distans (px) från topp av bild till närmsta öga
 
 debug = true;
 %------------------%4
-for i = 1:16
+for i = 1:1
     
 if i >9
     filename = sprintf('DB1\\db1_%d.jpg', i);
 else
-    filename = sprintf('DB1\\db1_0%d.jpg', i);
+    filename=sprintf('test\\db1_04.jpg', i);
+    %filename = sprintf('DB1\\db1_0%d.jpg', i);
 end
 %Skapa bilder på ansiktet
 face = imread(filename); % Vanlig
+imshow(face);
 %faceBW= rgb2gray(face);
 %face_eq = histeq(face);                         % Histogramkompenserad
 %facebw = imbinarize(rgb2gray(face_eq),0.7);       % Trösklad 85%
@@ -38,7 +40,7 @@ imgiled= il & ed;
 
 imgHybrid= imgilco | imgcoed | imgiled;
 imgHybrid= faceSeg.*imgHybrid;
-imshow(imgHybrid);
+%imshow(imgHybrid);
 eyePos= getEyes(imgHybrid);
 
 if(eyePos(1,1)< eyePos(2,1))
@@ -66,6 +68,7 @@ img= CropImages(face, leftEye, rightEye);
 % subplot(1, 2, 2);
 % imshow(img);
 % 
+
 img= rgb2gray(img);
 img = uint8(img(:));
 img = img-my;
@@ -76,5 +79,3 @@ disp(number);
 
 end
 
-
-hold off;

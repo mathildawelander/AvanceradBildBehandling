@@ -4,9 +4,9 @@ numEigenfaces = 8;
 vectors = zeros(vectorSize, numImages, 'uint8');
 
 for i = 1:numImages
-    filename = sprintf('DB1Cropped\\db1_%02d.jpg', i);
+    filename = sprintf('Cropped\\db1_%02d.jpg', i);
     
-    img = uint8(imread(filename));
+    img = uint8(rgb2gray(imread(filename)));
     
     vectors(:, i) = img(:);
 end
