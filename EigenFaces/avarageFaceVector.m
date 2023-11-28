@@ -4,6 +4,6 @@ function [m] = avarageFaceVector(data)
 % Output: m - the mean value of data
 
  data = double(data);
- m = sum(data(:)) / numel(data);
+ m = mean(data,2);
  
 end

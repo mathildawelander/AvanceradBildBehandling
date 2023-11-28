@@ -6,7 +6,7 @@ A = zeros(size(data));
 
 % Subtract the mean vector from each vector in data
 for i = 1:size(data, 2)
-    A(:, i) = data(:, i) - my;
+    A(:, i) = double(data(:, i)) - my;
 end
 
 end
