@@ -23,27 +23,27 @@ for i = 1:numImages
     List = [];
 
     try
-    img= uint8(rgb2gray(imread(filename)));
+    img= double(rgb2gray(imread(filename)));
     img=img(:);
     List= [List,img];
     end
     try
-    img= uint8(rgb2gray(imread(filename1)));
+    img= double(rgb2gray(imread(filename1)));
     img=img(:);
     List= [List,img];
     end
     try
-    img= uint8(rgb2gray(imread(filename2)));
+    img= double(rgb2gray(imread(filename2)));
     img=img(:);
     List= [List,img];
     end
     try
-    img= uint8(rgb2gray(imread(filename3)));
+    img= double(rgb2gray(imread(filename3)));
     img=img(:);
     List= [List,img];
     end
     try
-    img= uint8(rgb2gray(imread(filename4)));
+    img= double(rgb2gray(imread(filename4)));
     img=img(:);
     List= [List,img];
     end
@@ -97,12 +97,11 @@ V= top_eigenvectors;
 F= V*U;
 Class_weight= F'*myForEachFace;
 
-
-% for i= 1:16
-% figure;
-%     img= uint8(reshape(myForEachFace(:,i),[350,300]));
-%     imshow(img);
-% end
+for i= 1:16
+figure;
+    img= reshape(myForEachFace(:,i),[350,300]);
+    imshow(img, []);
+end
 
 
 save('FisherFaces.mat', 'F');

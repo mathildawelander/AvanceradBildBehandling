@@ -1,12 +1,7 @@
-
-image_size = [300,350];
 desired_left_eye_pos = [80, 125];
 desired_right_eye_pos = [220, 125];
 desired_distance_between_eyes = norm(desired_right_eye_pos - desired_left_eye_pos);
 desired_size = [350, 300]; % Height x Width
-left_eye = [85,125];
-right_eye= [200,125];
-
 
 for i = 1:16
 
