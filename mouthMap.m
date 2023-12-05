@@ -9,10 +9,10 @@ n = 0.95 * (0.5 * sum(Cr.^2)) / (0.5 * sum(Cr./Cb));
 mouthMap = Cr.^2 .* (Cr.^2 - n * Cr./Cb).^2;
 mouthMap = (mouthMap - min(mouthMap(:))) / (max(mouthMap(:)) - min(mouthMap(:)));
 
-threshold = 0.5; %ser ok ut på 0.5
+threshold = 0.8; %ser ok ut på 0.5
 MouthMap = mouthMap > threshold;
 
-se = strel('disk', 5);
+se = strel('disk', 10);
 MouthMap = imdilate(mouthMap, se);
 
 
