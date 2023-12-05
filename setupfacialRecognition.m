@@ -1,6 +1,6 @@
-numImages = 54; 
+numImages = 47; 
 vectorSize = 105000; % 300x350
-numEigenfaces = 38;
+numEigenfaces = 31;
 c= 16;
 vectors = zeros(vectorSize, numImages, 'uint8');
 
@@ -16,9 +16,9 @@ for i = 1:numImages
 
     filename2 = sprintf('AllCropped\\cl_%02d.jpg', i);
 
-    filename3 = sprintf('AllCropped\\ex_%02d.jpg', i);
+    %filename3 = sprintf('AllCropped\\ex_%02d.jpg', i);
 
-    filename4 = sprintf('AllCropped\\il_%02d.jpg', i);
+    %filename4 = sprintf('AllCropped\\il_%02d.jpg', i);
     
     List = [];
 
@@ -69,7 +69,7 @@ projectedAllImagesMy= calculateWeights(AllImagesMy, top_eigenvectors);
 projectedAllImages= calculateWeights(double(allVectors), top_eigenvectors);
 
 
-Sb= zeros(38,38);
+Sb= zeros(31,31);
 for i=1:16
     myimy=projectedmyForEachFace(i)-projectedAllImagesMy;
     myimyT= myimy';
@@ -78,7 +78,7 @@ for i=1:16
 end
 
 slotcount=1;
-sw= zeros(38,38);
+sw= zeros(31,31);
 
 for i=1:16
     traningImg= projectedAllImages(:, slotcount:(slotcount+numImagesArr(i)-1));

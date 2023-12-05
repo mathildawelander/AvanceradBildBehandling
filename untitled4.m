@@ -9,8 +9,7 @@ load('FisherFaces.mat', 'F');
 load('ClassWeight.mat', 'Class_weight');
 
 for i = 1:16
-    filename = sprintf('DB2\\il_%02d.jpg', i);
-
+    filename = sprintf('DB1\\db1_%02d.jpg', i);
  try
     face = imread(filename);
     
@@ -19,7 +18,7 @@ for i = 1:16
     faceSeg= FaceSegmentation(facegw);
     %imshow(faceSeg)
     
-    co= ColorBasedMethod(face, 60);
+    co= ColorBasedMethod(face, 40);
     ed= edgeDensityMethod(face,2);
     il= illuminationBasedMethod(face, 5);
     
@@ -31,7 +30,10 @@ for i = 1:16
     imgHybrid= faceSeg.*imgHybrid;
     %imshow(imgHybrid);
     
-    eyePos= getEyes(imgHybrid);
+    ycbrface= rgb2ycbcr(face);
+    mouthImg= mouthMap(ycbrface);
+    %imshow(mouthImg.*faceSeg);
+    eyePos= getEyes(imgHybrid, mouthImg);
     
     if(eyePos(1,1)< eyePos(2,1))
         leftEye= eyePos(1,:);
@@ -42,17 +44,19 @@ for i = 1:16
     end
     
     img= CropImages(face, leftEye, rightEye);
-    %imshow(img);
-    
+    fname = sprintf('AllCropped\\db1_%02d.jpg', i);
+    %imwrite(img, fname);
+    % imshow(img);
+
     figure;
-    
+
     % Display the first image in the first subplot
     subplot(1, 2, 1);
     imshow(face);
     hold on;
     plot(eyePos(:,1),eyePos(:,2), 'R+', 'MarkerSize',30);
     hold off;
-    
+
     % Display the second image in the second subplot
     subplot(1, 2, 2);
     imshow(img);

@@ -1,7 +1,7 @@
 function [processed_image] = CropImages(input_image, left_eye_pos, right_eye_pos)
 % Parameters
-    desired_left_eye_pos = [80, 125];
-    desired_right_eye_pos = [220, 125];
+    desired_left_eye_pos = [90, 125];
+    desired_right_eye_pos = [210, 125];
     desired_distance_between_eyes = norm(desired_right_eye_pos - desired_left_eye_pos);
     desired_size = [350, 300]; % Height x Width
 

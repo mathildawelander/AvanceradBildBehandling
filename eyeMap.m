@@ -19,8 +19,6 @@ imshow(Cr, [])
 
 eyeMapC = (Cb.^2 + Cr_.^2 + (Cb./Cr))/3;
 
-imshow(eyeMapC, []);
-
 radius = 10;  
 se = strel('disk', radius);
 

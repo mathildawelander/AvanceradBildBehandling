@@ -3,6 +3,8 @@ function [returnImg] = ColorBasedMethod(inputImg, threshold)
 %   Detailed explanation goes here
 grayImage = rgb2gray(inputImg);
 equalizedimg= histeq(grayImage);
+
+
 binaryImage= equalizedimg<threshold;
 
 cc= bwconncomp(binaryImage);
