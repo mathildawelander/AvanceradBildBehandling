@@ -12,10 +12,12 @@ function [eyePos] = getEyes(img, mouthImg, topBoundary)
    if numRegions > 2
     validRegions = regions(arrayfun(@(x) x.Centroid(2) < 3*size(img, 1) / 5, regions));
     validRegions = validRegions(arrayfun(@(x) x.Centroid(2) > topBoundary, validRegions));
+
+    validRegions = validRegions(arrayfun(@(x) x.Centroid(2) > 30*size(img,1)/100, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Centroid(1) > 1*size(img, 2) / 5, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Centroid(1) < 4*size(img, 2) / 5, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Eccentricity < 0.95, validRegions));
-        validRegions = validRegions(arrayfun(@(x) x.Area < 1200, validRegions));
+    validRegions = validRegions(arrayfun(@(x) x.Area < 2500, validRegions));
 
 
     % Sort the valid regions based on eccentricity

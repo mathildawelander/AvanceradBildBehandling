@@ -8,8 +8,6 @@ face =InputImg; % Vanlig
 face_eq = histeq(face);                         % Histogramkompenserad
 facebw = imbinarize(rgb2gray(face_eq),0.7);       % Trösklad 85%
 
-facebw = uint8(facebw);
-
 meanr = mean(mean(face_eq(:,:,1).*facebw));
 meang = mean(mean(face_eq(:,:,2).*facebw));
 meanb = mean(mean(face_eq(:,:,3).*facebw));

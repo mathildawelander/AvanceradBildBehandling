@@ -1,6 +1,7 @@
 function [outputImg] = grayWorld(inputImg)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
+
 meanr = mean(inputImg(:,:,1), 'all');
 meang = mean(inputImg(:,:,2), 'all');
 meanb = mean(inputImg(:,:,3), 'all');

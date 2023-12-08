@@ -24,26 +24,31 @@ for i = 1:numImages
 
     try
     img= double(rgb2gray(imread(filename)));
+    img= img/max(img(:));
     img=img(:);
     List= [List,img];
     end
     try
     img= double(rgb2gray(imread(filename1)));
+    img= img/max(img(:));
     img=img(:);
     List= [List,img];
     end
     try
     img= double(rgb2gray(imread(filename2)));
+    img= img/max(img(:));
     img=img(:);
     List= [List,img];
     end
     try
     img= double(rgb2gray(imread(filename3)));
+    img= img/max(img(:));
     img=img(:);
     List= [List,img];
     end
     try
     img= double(rgb2gray(imread(filename4)));
+    img= img/max(img(:));
     img=img(:);
     List= [List,img];
     end
@@ -69,7 +74,7 @@ projectedAllImagesMy= calculateWeights(AllImagesMy, top_eigenvectors);
 projectedAllImages= calculateWeights(double(allVectors), top_eigenvectors);
 
 
-Sb= zeros(31,31);
+Sb= zeros(numEigenfaces,numEigenfaces);
 for i=1:16
     myimy=projectedmyForEachFace(i)-projectedAllImagesMy;
     myimyT= myimy';
@@ -78,7 +83,7 @@ for i=1:16
 end
 
 slotcount=1;
-sw= zeros(31,31);
+sw= zeros(numEigenfaces,numEigenfaces);
 
 for i=1:16
     traningImg= projectedAllImages(:, slotcount:(slotcount+numImagesArr(i)-1));
@@ -104,7 +109,7 @@ figure;
 end
 
 
-% save('FisherFaces.mat', 'F');
-% save('ClassWeight.mat', 'Class_weight');
-% 
+save('FisherFaces.mat', 'F');
+save('ClassWeight.mat', 'Class_weight');
+
 

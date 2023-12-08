@@ -13,6 +13,7 @@ erodedImg = imerode(filledImg,se);
 erodedImg= imerode(erodedImg, se);
 erodedImg= imerode(erodedImg, se);
 
+
 cc= bwconncomp(erodedImg);
 stats= regionprops(cc, 'Area', 'BoundingBox','Solidity','Orientation', 'PixelIdxList');
 

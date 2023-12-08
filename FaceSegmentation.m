@@ -1,71 +1,70 @@
 function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
 
- % Convert the RGB image to HSV color space
+    % Convert the RGB image to YCbCr color space
     ycbrImage = rgb2ycbcr(inputImg);
 
-    % Extract the hue, saturation, and value channels
-    y = ycbrImage(:, :, 1);
-    cb = ycbrImage(:, :, 2);
-    cr = ycbrImage(:, :, 3);
+    % Extract the Y, Cb, and Cr channels
+    y = double(ycbrImage(:, :, 1)) ;
+    cb = double(ycbrImage(:, :, 2));
+    cr = double(ycbrImage(:, :, 3));
 
-    % Define the color range for skin tones in HSV space
-    % These values may need to be adjusted based on your images
-    skinyRange = [100, 255];
-    skincbRange = [112, 255];
-    skincrRange = [120, 170];
+    % Define the color range for skin tones in YCbCr space
+    skinyRange = double([110/255, 1]);
+    skincbRange = double([110/255, 1]);
+    skincrRange = double([120/255, 170/255]);
+
+    
 
     % Create a binary mask based on the specified color range
     skinMask = (y >= skinyRange(1) & y <= skinyRange(2)) & ...
                (cb >= skincbRange(1) & cb <= skincbRange(2)) & ...
                (cr >= skincrRange(1) & cr <= skincrRange(2));
-
-
     %imshow(skinMask);
-
-    %Perform morphological operations to refine the mask
+               
+    % Perform morphological operations to refine the mask
     se = strel('disk', 2);
     skinMask = imopen(skinMask, se);
-    skinMask= imclose(skinMask, se);
-    %imshow(skinMask);
+    skinMask = imclose(skinMask, se);
 
-binary_img = double(skinMask);
-binaryImg = imfill(binary_img, 'holes');
-target = 256:-4:4;
-binaryImg = histeq(binaryImg, target);
-binaryImg = imbinarize(binaryImg, 0.8);
-%imshow(binaryImg); 
+    se = strel('diamond', 3);
+    skinMask = imdilate(skinMask, se);
 
-stats = regionprops(binaryImg, 'Area', 'Centroid', 'Eccentricity');
+    binary_img = double(skinMask);
+    binaryImg = imfill(binary_img, 'holes');
+    target = 1:-0.01:0;
+    binaryImg = histeq(binaryImg, target);
+    binaryImg = imbinarize(binaryImg, 0.7);
 
-areas = [stats.Area];
-eccentricities = [stats.Eccentricity];
+    stats = regionprops(binaryImg, 'Area', 'Centroid', 'Eccentricity');
 
-% Filter blobs with area greater than 50,000
-largeBlobsIndices = find(areas > 50000);
+    areas = [stats.Area];
+    eccentricities = [stats.Eccentricity];
 
-if isempty(largeBlobsIndices)
-    disp('No blobs larger than 50,000 pixels found.');
-    return;
-end
+    % Filter blobs with area greater than 50,000
+    largeBlobsIndices = find(areas > 50000);
 
-% Extract the eccentricities of these large blobs
-largeBlobsEccentricities = eccentricities(largeBlobsIndices);
+    if isempty(largeBlobsIndices)
+        disp('No blobs larger than 50,000 pixels found.');
+        return;
+    end
 
-% Find the index of the blob with the smallest eccentricity
-[~, idxSmallestEccentricity] = min(largeBlobsEccentricities);
+    % Extract the eccentricities of these large blobs
+    largeBlobsEccentricities = eccentricities(largeBlobsIndices);
 
-% The index in the original stats array
-selectedBlobIndex = largeBlobsIndices(idxSmallestEccentricity);
+    % Find the index of the blob with the smallest eccentricity
+    [~, idxSmallestEccentricity] = min(largeBlobsEccentricities);
 
-binaryImg = ismember(bwlabel(binaryImg), selectedBlobIndex);
- 
-se = strel('disk', 3);
-binaryImg= imclose(binaryImg, se);
-FaceSeg = imfill(binaryImg, 'holes');
+    % The index in the original stats array
+    selectedBlobIndex = largeBlobsIndices(idxSmallestEccentricity);
 
-[rows, cols] = find(FaceSeg==1);
-yMin= min(rows);
-yMax= max(rows);
+    binaryImg = ismember(bwlabel(binaryImg), selectedBlobIndex);
 
+    se = strel('disk', 3);
+    binaryImg = imclose(binaryImg, se);
+    FaceSeg = imfill(binaryImg, 'holes');
+
+    [rows, ~] = find(FaceSeg == 1);
+    yMin = min(rows);
+    yMax = max(rows);
 
 end

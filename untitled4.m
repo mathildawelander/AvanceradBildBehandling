@@ -8,18 +8,21 @@ load('average_vector.mat', 'my');
 load('FisherFaces.mat', 'F');
 load('ClassWeight.mat', 'Class_weight');
 
-for i = 1:16
-    filename = sprintf('DB2\\cl_%02d.jpg', i);
+%15, 14,11,9,8,7,3,1
+for i = 1:16   
+    filename = sprintf('DB2\\il_%02d.jpg', i);
  try
-    face = imread(filename);
-    
+    face = double(imread(filename));
+    face= face / max(face(:));
+
     facegw= grayWorld(face);
+    
     
     [faceSeg, topBoundary, lowerBoundary]= FaceSegmentation(facegw);
     
    
 % Display the segmented face
-%imshow(faceSeg);
+imshow(faceSeg);
 threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
 
 % % Draw a red line at the top boundary
@@ -27,7 +30,7 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
 % plot([1, size(faceSeg, 2)], [threshold, threshold], 'r', 'LineWidth', 2);
 % hold off;
 
-    co= ColorBasedMethod(face, 50);
+    co= ColorBasedMethod(face, (50/255));
     %imshow(co);
     ed= edgeDensityMethod(face,2);
     %imshow(ed)
@@ -37,8 +40,13 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     imgilco= il & co;
     imgcoed= co & ed;
     imgiled= il & ed;
+
+    %imshow(imgilco);
+    %imshow(imgiled);
+    %imshow(imgcoed);
     
     imgHybrid= imgilco | imgcoed | imgiled;
+    %imshow(imgHybrid,[]);
     imgHybrid= faceSeg.*imgHybrid;
     %imshow(imgHybrid);
     
@@ -47,6 +55,7 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     %imshow(mouthImg.*faceSeg);
     eyePos= getEyes(imgHybrid, mouthImg, threshold);
     
+
     if(eyePos(1,1)< eyePos(2,1))
         leftEye= eyePos(1,:);
         rightEye= eyePos(2,:);
@@ -55,11 +64,11 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
         rightEye= eyePos(1,:);
     end
     
+    
     img= CropImages(face, leftEye, rightEye);
     % fname = sprintf('AllCropped\\il_%02d.jpg', i);
     % imwrite(img, fname);
-    %imshow(img);
-
+    % 
     % figure;
     % 
     % % Display the first image in the first subplot
@@ -73,17 +82,17 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     % subplot(1, 2, 2);
     % imshow(img);
     % 
-    
+
     img= rgb2gray(img);
     % %imshow(img);
 
     img = img(:);
-    %img = img-my; For eigenfaces
+    %img = img-my; %For eigenfaces
 
     Wimg = calculateWeights(double(img),F);
 
     number = getClosestFace(Wimg, Class_weight);
-    disp(number);
+    disp(i + "the number is" + number);
 end
 
 end

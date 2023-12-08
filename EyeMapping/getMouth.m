@@ -20,6 +20,6 @@ function [mouthPos] = getMouth(img)
        mouthPos = validRegions(sortedValidIndices(1)).Centroid;
     else
         mouthPos=-1;
-        disp('No valid regions found that meet the mouth criteria');
+        disp('No mouth');
     end
 end
