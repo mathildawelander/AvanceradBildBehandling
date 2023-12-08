@@ -1,4 +1,4 @@
-function [eyePos] = getEyes(img, mouthImg)
+function [eyePos] = getEyes(img, mouthImg, topBoundary)
 
     [labeledImage, numRegions] = bwlabel(img);
     regions = regionprops(labeledImage, 'Centroid', 'Area', 'BoundingBox', 'Eccentricity');
@@ -11,12 +11,15 @@ function [eyePos] = getEyes(img, mouthImg)
     end
    if numRegions > 2
     validRegions = regions(arrayfun(@(x) x.Centroid(2) < 3*size(img, 1) / 5, regions));
-    validRegions = validRegions(arrayfun(@(x) x.Centroid(2) > size(img, 1) / 100 * 15, validRegions));
+    validRegions = validRegions(arrayfun(@(x) x.Centroid(2) > topBoundary, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Centroid(1) > 1*size(img, 2) / 5, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Centroid(1) < 4*size(img, 2) / 5, validRegions));
+    validRegions = validRegions(arrayfun(@(x) x.Eccentricity < 0.95, validRegions));
+        validRegions = validRegions(arrayfun(@(x) x.Area < 1200, validRegions));
+
 
     % Sort the valid regions based on eccentricity
-    [~, sortedValidIndices] = sort([arrayfun(@(x) x.Eccentricity, validRegions)],'ascend');
+    [~, sortedValidIndices] = sort([arrayfun(@(x) x.Area, validRegions)],'descend');
     
     % Iterate over pairs of regions to find two that meet the criteria
     for i = 1:length(sortedValidIndices) - 1
@@ -28,15 +31,18 @@ function [eyePos] = getEyes(img, mouthImg)
             eyeDist = pdist([region1.Centroid; region2.Centroid]);
             
             % Check if distance is within the specified range (80-150 pixels)
-            if eyeDist >= 80 && eyeDist <= 150
+            if eyeDist >= 80 && eyeDist <= 180
                
                 % Calculate the angle with the horizontal
                 deltaY = region2.Centroid(2) - region1.Centroid(2);
                 deltaX = region2.Centroid(1) - region1.Centroid(1);
                 angle = abs(atan2d(deltaY, deltaX));
                 
+% angle: 6 o dist: 165
+% eller angle 7.3
+
                 % Check if the angle is within ±5 degrees of horizontal
-                if angle <= 5 || abs(angle-180) <= 5
+                if angle <= 7.3 || abs(angle-180) <= 7.3
                     if mouthPos~= -1
                            if mouthPos(1) > min(region1.Centroid(1), region2.Centroid(1)) && ...
                             mouthPos(1) < max(region1.Centroid(1), region2.Centroid(1))

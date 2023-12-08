@@ -16,9 +16,9 @@ for i = 1:numImages
 
     filename2 = sprintf('AllCropped\\cl_%02d.jpg', i);
 
-    %filename3 = sprintf('AllCropped\\ex_%02d.jpg', i);
+    filename3 = sprintf('AllCropped\\ex_%02d.jpg', i);
 
-    %filename4 = sprintf('AllCropped\\il_%02d.jpg', i);
+    filename4 = sprintf('AllCropped\\il_%02d.jpg', i);
     
     List = [];
 
@@ -104,7 +104,7 @@ figure;
 end
 
 
-save('FisherFaces.mat', 'F');
-save('ClassWeight.mat', 'Class_weight');
-
+% save('FisherFaces.mat', 'F');
+% save('ClassWeight.mat', 'Class_weight');
+% 
 

@@ -1,4 +1,4 @@
-function [returnImg] =  illuminationBasedMethod(InputImg, radius)
+function [returnImg] =  illuminationBasedMethod(InputImg, radius, threshold)
 %UNTITLED6 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -24,16 +24,6 @@ face(:,:,1) = face_eq(:,:,1)*multr;
 face(:,:,2) = face_eq(:,:,2)*multg;
 face(:,:,3) = face_eq(:,:,3)*multb;
 
-face_BW = rgb2gray(face);
-face_BW_eq = histeq(face_BW); 
-
-max(max(face_BW));
-min(min(face_BW));
-
-
-
-HSVface = rgb2hsv(face_eq);
-
 % EYE MAP %
 YCbCrFace = rgb2ycbcr(face_eq);
 
@@ -45,7 +35,6 @@ Cr = normalize(double(YCbCrFace(:,:,3)),"norm",1);
 Cr_ = 1-Cr;
 
 eyeMapC = (Cb.^2 + Cr_.^2 + (Cb./Cr))/3;
-
 
 se = strel('disk', radius);
 % Example: Dilation using the circular structuring element
@@ -62,7 +51,7 @@ newimg= imdilate(andimg, se);
 maxVal = max(newimg(:));
 minVal = min(newimg(:));
 newimg= (newimg-minVal)/(maxVal-minVal);
-newimg= newimg > 0.5;
+newimg= newimg > threshold;
 
 cc= bwconncomp(newimg);
 stats= regionprops(cc, 'Area', 'BoundingBox','Solidity','Orientation', 'PixelIdxList');

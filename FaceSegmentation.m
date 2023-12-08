@@ -1,4 +1,4 @@
-function [FaceSeg] = FaceSegmentation(inputImg)
+function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
 
  % Convert the RGB image to HSV color space
     ycbrImage = rgb2ycbcr(inputImg);
@@ -62,5 +62,10 @@ binaryImg = ismember(bwlabel(binaryImg), selectedBlobIndex);
 se = strel('disk', 3);
 binaryImg= imclose(binaryImg, se);
 FaceSeg = imfill(binaryImg, 'holes');
+
+[rows, cols] = find(FaceSeg==1);
+yMin= min(rows);
+yMax= max(rows);
+
 
 end

@@ -1,8 +1,8 @@
 function [processed_image] = CropImages(input_image, left_eye_pos, right_eye_pos)
 % Parameters
-    desired_left_eye_pos = [90, 125];
-    desired_right_eye_pos = [210, 125];
-    desired_distance_between_eyes = norm(desired_right_eye_pos - desired_left_eye_pos);
+    desired_left_eye_pos = [75, 125];
+    %desired_right_eye_pos = [270, 125];
+    desired_distance_between_eyes = 150;
     desired_size = [350, 300]; % Height x Width
 
     % Calculate the rotation angle
@@ -19,14 +19,6 @@ function [processed_image] = CropImages(input_image, left_eye_pos, right_eye_pos
     translation_y = desired_left_eye_pos(2) - (scaling_factor * left_eye_pos(1) * sin(angle)) - scaling_factor * left_eye_pos(2) * cos(angle);
     translation_vector = [translation_x, translation_y];
 
-    % Create the affine transformation matrix
-    % The matrix has the form: [a b 0; c d 0; e f 1]
-    % where a = scaling_factor * cos(angle)
-    %       b = scaling_factor * sin(angle)
-    %       c = -scaling_factor * sin(angle)
-    %       d = scaling_factor * cos(angle)
-    %       e = translation_x
-    %       f = translation_y
     affine_matrix = [scaling_factor * cos(angle), scaling_factor * sin(angle), 0; ...
                      -scaling_factor * sin(angle), scaling_factor * cos(angle), 0; ...
                      translation_x, translation_y, 1];
