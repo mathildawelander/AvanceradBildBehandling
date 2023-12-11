@@ -25,15 +25,19 @@ function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
     se = strel('disk', 2);
     skinMask = imopen(skinMask, se);
     skinMask = imclose(skinMask, se);
+    %imshow(skinMask);
 
     se = strel('diamond', 3);
     skinMask = imdilate(skinMask, se);
+    skinMask = imdilate(skinMask, se);
+    %imshow(skinMask);
 
     binary_img = double(skinMask);
     binaryImg = imfill(binary_img, 'holes');
     target = 1:-0.01:0;
     binaryImg = histeq(binaryImg, target);
     binaryImg = imbinarize(binaryImg, 0.7);
+    %imshow(binaryImg);
 
     stats = regionprops(binaryImg, 'Area', 'Centroid', 'Eccentricity');
 
@@ -58,6 +62,7 @@ function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
     selectedBlobIndex = largeBlobsIndices(idxSmallestEccentricity);
 
     binaryImg = ismember(bwlabel(binaryImg), selectedBlobIndex);
+    %imshow(binaryImg);
 
     se = strel('disk', 3);
     binaryImg = imclose(binaryImg, se);

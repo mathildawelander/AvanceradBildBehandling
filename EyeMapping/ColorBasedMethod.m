@@ -7,10 +7,19 @@ equalizedimg= histeq(grayImage);
 
 binaryImage= equalizedimg<threshold;
 
+imshow(binaryImage);
+% 
+%     se = strel('diamond', 2);
+% 
+%     binaryImage = imopen(binaryImage, se);
+% 
+% imshow(binaryImage);
+
 cc= bwconncomp(binaryImage);
 stats= regionprops(cc, 'Area', 'BoundingBox','Solidity','Orientation', 'PixelIdxList');
 
 filteredImage = false(size(binaryImage));
+imshow(filteredImage);
 for i = 1:length(stats)
     boundingBox = stats(i).BoundingBox;
     aspectRatio = boundingBox(3) / boundingBox(4);

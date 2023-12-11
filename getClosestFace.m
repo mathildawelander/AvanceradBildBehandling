@@ -5,6 +5,7 @@ imgNumber=0;
 
 distances = pdist2(imgWeights', allWeights', 'euclidean');
 
-[~, index] = min(distances);
-imgNumber= index;
+[distance, index] = min(distances);
+if distance < 720
+    imgNumber = index;
 end

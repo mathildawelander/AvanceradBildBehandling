@@ -1,4 +1,4 @@
-function [eyePos] = getEyes(img, mouthImg, topBoundary)
+function [eyePos] = getEyes(img, mouthImg, topBoundary, imgNumber)
 
     [labeledImage, numRegions] = bwlabel(img);
     regions = regionprops(labeledImage, 'Centroid', 'Area', 'BoundingBox', 'Eccentricity');
@@ -16,7 +16,7 @@ function [eyePos] = getEyes(img, mouthImg, topBoundary)
     validRegions = validRegions(arrayfun(@(x) x.Centroid(2) > 30*size(img,1)/100, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Centroid(1) > 1*size(img, 2) / 5, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Centroid(1) < 4*size(img, 2) / 5, validRegions));
-    validRegions = validRegions(arrayfun(@(x) x.Eccentricity < 0.95, validRegions));
+    %validRegions = validRegions(arrayfun(@(x) x.Eccentricity < 0.98, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Area < 2500, validRegions));
 
 
@@ -79,6 +79,6 @@ if ~exist('tempRegions', 'var')
        eyePos(1, :) = tempRegions(1).Centroid;
        eyePos(2, :) = tempRegions(2).Centroid;
     else
-        disp('No valid regions found that meet the criteria');
+        disp('No eyes detected for id: ' + imgNumber);
     end
 end
