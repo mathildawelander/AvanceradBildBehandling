@@ -34,6 +34,7 @@ Cr_ = 1-Cr;
 
 eyeMapC = (Cb.^2 + Cr_.^2 + (Cb./Cr))/3;
 
+
 se = strel('disk', radius);
 % Example: Dilation using the circular structuring element
 dilated_image = imdilate(Y, se);
@@ -49,6 +50,8 @@ newimg= imdilate(andimg, se);
 maxVal = max(newimg(:));
 minVal = min(newimg(:));
 newimg= (newimg-minVal)/(maxVal-minVal);
+
+
 newimg= newimg > threshold;
 
 cc= bwconncomp(newimg);

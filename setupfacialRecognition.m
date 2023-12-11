@@ -1,6 +1,6 @@
-numImages = 47; 
+numImages = 41; 
 vectorSize = 105000; % 300x350
-numEigenfaces = 31;
+numEigenfaces = 25;
 c= 16;
 vectors = zeros(vectorSize, numImages, 'uint8');
 

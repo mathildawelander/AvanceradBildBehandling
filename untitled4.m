@@ -10,7 +10,7 @@ load('ClassWeight.mat', 'Class_weight');
 
 %15, 14,11,9,8,7,3,1
 for i = 1:16   
-    filename = sprintf('DB2\\il_%02d.jpg', i);
+    filename = sprintf('DB1\\db1_%02d.jpg', i);
  try
     face = double(imread(filename));
     face= face / max(face(:));
@@ -22,7 +22,7 @@ for i = 1:16
     
    
 % Display the segmented face
-imshow(faceSeg);
+% imshow(faceSeg);
 threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
 
 % % Draw a red line at the top boundary
@@ -32,11 +32,11 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
 
     co= ColorBasedMethod(face, (50/255));
     %imshow(co);
-    ed= edgeDensityMethod(face,2);
+    ed= edgeDensityMethod(face,1, faceSeg);
     %imshow(ed)
-    il= illuminationBasedMethod(face, 5, 0.36);
+    il= illuminationBasedMethod(face, 5, 0.60);
     %imshow(il);
-    
+    %transformera circulärt förstora blob, 
     imgilco= il & co;
     imgcoed= co & ed;
     imgiled= il & ed;
@@ -66,7 +66,7 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     
     
     img= CropImages(face, leftEye, rightEye);
-    % fname = sprintf('AllCropped\\il_%02d.jpg', i);
+    % fname = sprintf('AllCropped\\ex_%02d.jpg', i);
     % imwrite(img, fname);
     % 
     % figure;
@@ -92,7 +92,7 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     Wimg = calculateWeights(double(img),F);
 
     number = getClosestFace(Wimg, Class_weight);
-    disp(i + "the number is" + number);
+    disp(i + " the number is " + number);
 end
 
 end
