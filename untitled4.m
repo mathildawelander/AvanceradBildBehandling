@@ -8,9 +8,22 @@ load('average_vector.mat', 'my');
 load('FisherFaces.mat', 'F');
 load('ClassWeight.mat', 'Class_weight');
 
+
+
+%DB1, Total: 16 
+    % Id incorrect guesses: 14
+%DB2_bl, Total: 9
+    % Id incorrect guesses: 5, 6, 10
+%DB2_cl, Total: 16 
+%DB2_ex Total: 7
+    % Id could not find eyes: 4, 7
+%DB2_il Total: 6
+    % Id incorrect guesses: 1, 9
+    % Id could not find eyes:  8, 16
+
 %15, 14,11,9,8,7,3,1
 for i = 1:16   
-    filename = sprintf('DB1\\db1_%02d.jpg', i);
+    filename = sprintf('DB2\\il_%02d.jpg', i);
  try
     face = double(imread(filename));
     face= face / max(face(:));
@@ -66,21 +79,21 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     
     
     img= CropImages(face, leftEye, rightEye);
-    % fname = sprintf('AllCropped\\ex_%02d.jpg', i);
+    % fname = sprintf('AllCropped\\il_%02d.jpg', i);
     % imwrite(img, fname);
-
-    figure;
-
-    % Display the first image in the first subplot
-    subplot(1, 2, 1);
-    imshow(face);
-    hold on;
-    plot(eyePos(:,1),eyePos(:,2), 'R+', 'MarkerSize',30);
-    hold off;
-
-    % Display the second image in the second subplot
-    subplot(1, 2, 2);
-    imshow(img);
+    % % 
+    % figure;
+    % 
+    % % Display the first image in the first subplot
+    % subplot(1, 2, 1);
+    % imshow(face);
+    % hold on;
+    % plot(eyePos(:,1),eyePos(:,2), 'R+', 'MarkerSize',30);
+    % hold off;
+    % 
+    % % Display the second image in the second subplot
+    % subplot(1, 2, 2);
+    % imshow(img);
 
 
     img= rgb2gray(img);
@@ -89,8 +102,8 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     img = img(:);
     %img = img-my; %For eigenfaces
 
-    Wimg = calculateWeights(double(img),F);
-
+    Wimg = calculateWeights(img,F);
+    % 
     number = getClosestFace(Wimg, Class_weight);
     disp(i + " the number is " + number);
 end
