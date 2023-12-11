@@ -10,7 +10,7 @@ load('ClassWeight.mat', 'Class_weight');
 
 %15, 14,11,9,8,7,3,1
 for i = 1:16   
-    filename = sprintf('DB1\\d_%02d.jpg', i);
+    filename = sprintf('DB2\\cl_%02d.jpg', i);
  try
     face = double(imread(filename));
     face= face / max(face(:));
@@ -33,8 +33,8 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     co= ColorBasedMethod(face, (50/255));
     %imshow(co);
     ed= edgeDensityMethod(face,1, faceSeg);
-    imshow(ed)
-    il= illuminationBasedMethod(face, 5, 0.60);
+    % imshow(ed)
+    il= illuminationBasedMethod(face, 5, 0.60, faceSeg);
     %imshow(il);
     %transformera circulärt förstora blob, 
     imgilco= il & co;
@@ -66,9 +66,9 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     
     
     img= CropImages(face, leftEye, rightEye);
-    % fname = sprintf('AllCropped\\il_%02d.jpg', i);
+    % fname = sprintf('AllCropped\\cl_%02d.jpg', i);
     % imwrite(img, fname);
-    % 
+
     figure;
 
     % Display the first image in the first subplot

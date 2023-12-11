@@ -33,9 +33,9 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     co= ColorBasedMethod(face, (50/255));
     %imshow(co);
     ed= edgeDensityMethod(face,1, faceSeg);
-    %imshow(ed)
-    il= illuminationBasedMethod(face, 5, 0.60);
-    %imshow(il);
+    imshow(ed)
+    il= illuminationBasedMethod(face, 5, 0.60, faceSeg);
+    imshow(il);
     %transformera circulärt förstora blob, 
     imgilco= il & co;
     imgcoed= co & ed;
@@ -48,7 +48,7 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     imgHybrid= imgilco | imgcoed | imgiled;
     %imshow(imgHybrid,[]);
     imgHybrid= faceSeg.*imgHybrid;
-    %imshow(imgHybrid);
+    imshow(imgHybrid);
     
     ycbrface= rgb2ycbcr(face);
     mouthImg= mouthMap(ycbrface);
@@ -68,20 +68,20 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
     img= CropImages(face, leftEye, rightEye);
     % fname = sprintf('AllCropped\\ex_%02d.jpg', i);
     % imwrite(img, fname);
-    % 
-    % figure;
-    % 
-    % % Display the first image in the first subplot
-    % subplot(1, 2, 1);
-    % imshow(face);
-    % hold on;
-    % plot(eyePos(:,1),eyePos(:,2), 'R+', 'MarkerSize',30);
-    % hold off;
-    % 
-    % % Display the second image in the second subplot
-    % subplot(1, 2, 2);
-    % imshow(img);
-    % 
+
+    figure;
+
+    % Display the first image in the first subplot
+    subplot(1, 2, 1);
+    imshow(face);
+    hold on;
+    plot(eyePos(:,1),eyePos(:,2), 'R+', 'MarkerSize',30);
+    hold off;
+
+    % Display the second image in the second subplot
+    subplot(1, 2, 2);
+    imshow(img);
+
 
     img= rgb2gray(img);
     % %imshow(img);

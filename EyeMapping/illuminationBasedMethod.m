@@ -1,4 +1,4 @@
-function [returnImg] =  illuminationBasedMethod(InputImg, radius, threshold)
+function [returnImg] =  illuminationBasedMethod(InputImg, radius, threshold, faceSeg)
 %UNTITLED6 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -50,28 +50,55 @@ newimg= imdilate(andimg, se);
 maxVal = max(newimg(:));
 minVal = min(newimg(:));
 newimg= (newimg-minVal)/(maxVal-minVal);
+keepGoing=true;
+imshow(newimg);
 
-
-newimg= newimg > threshold;
-
-cc= bwconncomp(newimg);
+while keepGoing
+newimgnew= newimg > threshold;
+newimgnew= newimgnew.*faceSeg;
+imshow(newimgnew);
+cc= bwconncomp(newimgnew);
 stats= regionprops(cc, 'Area', 'BoundingBox','Solidity','Orientation', 'PixelIdxList');
 
-filteredImage = false(size(newimg));
+filteredImage = false(size(newimgnew));
 for i = 1:length(stats)
     boundingBox = stats(i).BoundingBox;
     aspectRatio = boundingBox(3) / boundingBox(4);
     if stats(i).Solidity > 0.5 && aspectRatio >= 0.8 && aspectRatio <= 4.0 ...
-        && ~any(stats(i).PixelIdxList <= size(newimg, 2)) ...  % Not touching top border
-        && ~any(stats(i).PixelIdxList > numel(newimg) - size(newimg, 2)) ...  % Not touching bottom border
-        && ~any(mod(stats(i).PixelIdxList, size(newimg, 1)) == 1) ...  % Not touching left border
-        && ~any(mod(stats(i).PixelIdxList, size(newimg, 1)) == 0) ...  % Not touching right border
+        && ~any(stats(i).PixelIdxList <= size(newimgnew, 2)) ...  % Not touching top border
+        && ~any(stats(i).PixelIdxList > numel(newimgnew) - size(newimgnew, 2)) ...  % Not touching bottom border
+        && ~any(mod(stats(i).PixelIdxList, size(newimgnew, 1)) == 1) ...  % Not touching left border
+        && ~any(mod(stats(i).PixelIdxList, size(newimgnew, 1)) == 0) ...  % Not touching right border
         && stats(i).Orientation >= -45 && stats(i).Orientation <= 45
         filteredImage(stats(i).PixelIdxList) = true;
     end
 end
 
+imshow(filteredImage);
 
-returnImg=newimg ;
+[labeledImage, ~] = bwlabel(filteredImage);
+regions = regionprops(labeledImage, 'Centroid', 'Area', 'BoundingBox', 'Eccentricity');
+validRegions = regions(arrayfun(@(x) x.Centroid(2) < 3*size(InputImg, 1) / 5, regions));
+    validRegions = validRegions(arrayfun(@(x) x.Centroid(2) > 30*size(InputImg,1)/100, validRegions));
+    validRegions = validRegions(arrayfun(@(x) x.Centroid(1) > 1*size(InputImg, 2) / 5, validRegions));
+    validRegions = validRegions(arrayfun(@(x) x.Centroid(1) < 4*size(InputImg, 2) / 5, validRegions));
+    validRegions = validRegions(arrayfun(@(x) x.Eccentricity < 0.95, validRegions));
+    validRegionsSmall = validRegions(arrayfun(@(x) x.Area > 5, validRegions));
+    validRegionsLarge = validRegions(arrayfun(@(x) x.Area > 500, validRegions));
+
+
+numRegionsRemoveSmall=size(validRegionsSmall,1);
+numRegionsRemoveLarge=size(validRegionsLarge,1);
+
+if (numRegionsRemoveLarge>= 2) || threshold==0.3
+    keepGoing= false;
+else
+    threshold= threshold-0.05;
+end
+
+
+end
+
+returnImg=newimgnew ;
 
 end
