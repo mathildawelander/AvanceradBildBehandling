@@ -28,6 +28,7 @@ function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
 
     se = strel('diamond', 3);
     skinMask = imdilate(skinMask, se);
+        skinMask = imdilate(skinMask, se);
 
     binary_img = double(skinMask);
     binaryImg = imfill(binary_img, 'holes');

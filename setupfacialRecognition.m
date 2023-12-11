@@ -1,6 +1,6 @@
-numImages = 47; 
+numImages = 41; 
 vectorSize = 105000; % 300x350
-numEigenfaces = 31;
+numEigenfaces = 25;
 c= 16;
 vectors = zeros(vectorSize, numImages, 'uint8');
 
@@ -13,7 +13,7 @@ for i = 1:numImages
     filename = sprintf('AllCropped\\db1_%02d.jpg', i);
     
     filename1 = sprintf('AllCropped\\bl_%02d.jpg', i);
-
+    % 
     filename2 = sprintf('AllCropped\\cl_%02d.jpg', i);
 
     filename3 = sprintf('AllCropped\\ex_%02d.jpg', i);
