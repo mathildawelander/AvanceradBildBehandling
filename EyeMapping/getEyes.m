@@ -1,4 +1,4 @@
-function [eyePos] = getEyes(img, mouthImg, topBoundary)
+function [eyePos] = getEyes(img, mouthImg, topBoundary, il, co)
 
     [labeledImage, numRegions] = bwlabel(img);
     regions = regionprops(labeledImage, 'Centroid', 'Area', 'BoundingBox', 'Eccentricity');
@@ -18,7 +18,9 @@ function [eyePos] = getEyes(img, mouthImg, topBoundary)
     validRegions = validRegions(arrayfun(@(x) x.Centroid(1) < 4*size(img, 2) / 5, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Eccentricity < 0.98, validRegions));
     validRegions = validRegions(arrayfun(@(x) x.Area < 2500, validRegions));
-
+    if size(validRegions,1) == 2
+    selectedRegions =validRegions;
+    end
 
     % Sort the valid regions based on eccentricity
     [~, sortedValidIndices] = sort([arrayfun(@(x) x.Area, validRegions)],'descend');
@@ -79,6 +81,28 @@ if ~exist('tempRegions', 'var')
        eyePos(1, :) = tempRegions(1).Centroid;
        eyePos(2, :) = tempRegions(2).Centroid;
     else
-        disp('No valid regions found that meet the criteria');
+        if ~isempty(il)
+        eyePos=getEyes(il, mouthImg, topBoundary, [], co);
+        elseif ~isempty(co)
+        imshow(co);
+            se1 = strel('disk', 1);
+    se = strel('disk', 5);
+% Example: Dilation using the circular structuring element
+co = imerode(co, se1);
+
+% Example: Erosion using the circular structuring element
+co = imerode(co, se);
+
+% Example: Dilation using the circular structuring element
+co = imdilate(co, se);
+
+imshow(co);
+    co = imfill(co, 'holes');
+    imshow(co);
+        eyePos=getEyes(co, mouthImg, topBoundary, [], []);
+        else
+                disp('No valid regions found that meet the criteria');
+        end
+    
     end
 end

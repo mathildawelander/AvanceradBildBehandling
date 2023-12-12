@@ -51,12 +51,12 @@ maxVal = max(newimg(:));
 minVal = min(newimg(:));
 newimg= (newimg-minVal)/(maxVal-minVal);
 keepGoing=true;
-imshow(newimg);
+%imshow(newimg);
 
 while keepGoing
 newimgnew= newimg > threshold;
 newimgnew= newimgnew.*faceSeg;
-imshow(newimgnew);
+%imshow(newimgnew);
 cc= bwconncomp(newimgnew);
 stats= regionprops(cc, 'Area', 'BoundingBox','Solidity','Orientation', 'PixelIdxList');
 
@@ -74,7 +74,7 @@ for i = 1:length(stats)
     end
 end
 
-imshow(filteredImage);
+%imshow(filteredImage);
 
 [labeledImage, ~] = bwlabel(filteredImage);
 regions = regionprops(labeledImage, 'Centroid', 'Area', 'BoundingBox', 'Eccentricity');
