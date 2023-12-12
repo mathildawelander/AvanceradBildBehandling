@@ -102,11 +102,15 @@ V= top_eigenvectors;
 F= V*U;
 Class_weight= F'*myForEachFace;
 
-for i= 1:16
 figure;
-    img= reshape(myForEachFace(:,i),[350,300]);
+
+for i = 1:15
+    subplot(4, 4, i);  % 4x4 grid, place the i-th image in the grid
+    img = reshape(F(:, i), [350, 300]);
     imshow(img, []);
 end
+
+sgtitle('All Images');  % Add a title to the entire figure
 
 
 save('FisherFaces.mat', 'F');

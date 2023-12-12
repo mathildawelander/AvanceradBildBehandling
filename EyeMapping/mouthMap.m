@@ -12,7 +12,6 @@ mouthMap = (mouthMap - min(mouthMap(:))) / (max(mouthMap(:)) - min(mouthMap(:)))
 
 threshold = 0.25; %ser ok ut på 0.5
 MouthMap = mouthMap > threshold;
-imshow(MouthMap);
 
 se= strel('disk', 5);
 MouthMap= imdilate(MouthMap, se);
