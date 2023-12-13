@@ -1,4 +1,5 @@
 function [outputIMG] = mouthMap(inputIMG, faceSeg)
+inputIMG= rgb2ycbcr(inputIMG);
 Cb = inputIMG(:,:,2);
 Cr = inputIMG(:,:,3);
 

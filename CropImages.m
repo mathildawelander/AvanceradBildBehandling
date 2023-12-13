@@ -1,9 +1,9 @@
 function [processed_image] = CropImages(input_image, left_eye_pos, right_eye_pos)
 % Parameters
-    desired_left_eye_pos = [75, 100];
+    desired_left_eye_pos = [65, 90];
     %desired_right_eye_pos = [270, 125];
-    desired_distance_between_eyes = 150;
-    desired_size = [350, 300]; % Height x Width
+    desired_distance_between_eyes = 170;
+    desired_size = [340, 300]; % Height x Width
 
     % Calculate the rotation angle
     delta_y = right_eye_pos(2) - left_eye_pos(2);

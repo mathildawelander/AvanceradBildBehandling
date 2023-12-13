@@ -1,7 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%
 %-----Settings-----%
-clear all;
-
 addpath('EigenFaces\');
 addpath('EyeMapping\');
 load('feature_vectors.mat', 'W');
@@ -22,52 +20,21 @@ load('ClassWeight.mat', 'Class_weight');
     % Id could not find eyes:  8, 16
 
 %15, 14,11,9,8,7,3,1
-for i = 4:16   
-    filename = sprintf('DB2\\ex_%02d.jpg', i);
+for i = 1:16   
+    filename = sprintf('DB2\\cl_%02d.jpg', i);
  try
     face = double(imread(filename));
-    face= face / max(face(:));
+    face= face/max(face(:));
 
     facegw= grayWorld(face);
-    
-    
     [faceSeg, topBoundary, lowerBoundary]= FaceSegmentation(facegw);
     
-   
-% Display the segmented face
-imshow(faceSeg);
-threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
+    threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
+    [imgHybrid,ed,il,co]= eyeMap(face, faceSeg);
 
-% % Draw a red line at the top boundary
-% hold on;
-% plot([1, size(faceSeg, 2)], [threshold, threshold], 'r', 'LineWidth', 2);
-% hold off;
-
-    co= ColorBasedMethod(face, (50/255));
-    imshow(co);
-    ed= edgeDensityMethod(face,1, faceSeg);
-    imshow(ed)
-    il= illuminationBasedMethod(face, 5, 0.60, faceSeg);
-    imshow(il);
-    %transformera circulärt förstora blob, 
-    imgilco= il & co;
-    imgcoed= co & ed;
-    imgiled= il & ed;
-
-    %imshow(imgilco);
-    %imshow(imgiled);
-    %imshow(imgcoed);
+    mouthImg= mouthMap(face, faceSeg);
     
-    imgHybrid= imgilco | imgcoed | imgiled;
-    %imshow(imgHybrid,[]);
-    imgHybrid= faceSeg.*imgHybrid;
-    imshow(imgHybrid);
-    
-    ycbrface= rgb2ycbcr(face);
-    mouthImg= mouthMap(ycbrface);
-    %imshow(mouthImg.*faceSeg);
-    eyePos= getEyes(imgHybrid, mouthImg, threshold, il);
-    
+    eyePos= getEyes(imgHybrid, mouthImg, threshold, il, co);
 
     if(eyePos(1,1)< eyePos(2,1))
         leftEye= eyePos(1,:);
@@ -76,27 +43,14 @@ threshold= lowerBoundary-(0.8*(lowerBoundary-topBoundary));
          leftEye= eyePos(2,:);
         rightEye= eyePos(1,:);
     end
-    
-    
     img= CropImages(face, leftEye, rightEye);
-    % fname = sprintf('AllCropped\\il_%02d.jpg', i);
+    % fname = sprintf('AllCropped\\db1_%02d.jpg', i);
     % imwrite(img, fname);
-    % % 
-    % figure;
-    % % 
-    % % % Display the first image in the first subplot
-    imshow(face);
-    hold on;
-    plot(eyePos(:,1),eyePos(:,2), 'R+', 'MarkerSize',20);
-    hold off;
-    % 
-    % % Display the second image in the second subplot
-    % subplot(1, 2, 2);
-    % imshow(img);
-%2, 4
+    
+    %showImg(face, eyePos, img);
 
     img= rgb2gray(img);
-    % %imshow(img);
+    %imshow(img);
 
     img = img(:);
     %img = img-my; %For eigenfaces

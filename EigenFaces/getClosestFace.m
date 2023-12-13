@@ -4,7 +4,17 @@ function [imgNumber] = getClosestFace(imgWeights,allWeights)
 imgNumber=0;
 
 distances = pdist2(imgWeights', allWeights', 'euclidean');
+%0.6878,
+%0.7102
+%0.4626
+%0.502
 
-[~, index] = min(distances);
-imgNumber= index;
+[minDist, index] = min(distances);
+if minDist<462.6
+    imgNumber= index;
+
+else 
+    imgNumber=0;
+end
+
 end

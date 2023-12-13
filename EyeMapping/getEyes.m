@@ -96,7 +96,7 @@ co = imerode(co, se);
 % Example: Dilation using the circular structuring element
 co = imdilate(co, se);
 
-imshow(co);
+%imshow(co);
     co = imfill(co, 'holes');
     imshow(co);
         eyePos=getEyes(co, mouthImg, topBoundary, [], []);
@@ -105,4 +105,6 @@ imshow(co);
         end
     
     end
+
+
 end
