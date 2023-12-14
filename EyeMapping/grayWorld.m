@@ -1,17 +1,18 @@
 function [outputImg] = grayWorld(inputImg)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+    % Calculate the mean values for each color channel
+    meanRed = mean(inputImg(:,:,1), 'all');
+    meanGreen = mean(inputImg(:,:,2), 'all');
+    meanBlue = mean(inputImg(:,:,3), 'all');
 
-meanr = mean(inputImg(:,:,1), 'all');
-meang = mean(inputImg(:,:,2), 'all');
-meanb = mean(inputImg(:,:,3), 'all');
+    % Compute scaling factors for each color channel
+    alpha = meanGreen / meanRed;
+    beta = meanGreen / meanBlue;
 
-alpha= meang/meanr;
-beta= meang/meanb;
+    % Apply gray world assumption to balance color channels
+    balancedImage(:,:,1) = inputImg(:,:,1) * alpha;
+    balancedImage(:,:,2) = inputImg(:,:,2);
+    balancedImage(:,:,3) = inputImg(:,:,3) * beta;
 
-face(:,:,1) = inputImg(:,:,1)*alpha;
-face(:,:,2) = inputImg(:,:,2);
-face(:,:,3) = inputImg(:,:,3)*beta;
-
-outputImg= face;
+    % Output the balanced image
+    outputImg = balancedImage;
 end

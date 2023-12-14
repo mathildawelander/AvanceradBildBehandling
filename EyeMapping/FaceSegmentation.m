@@ -1,8 +1,7 @@
 function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
-
     % Convert the RGB image to YCbCr color space
     ycbrImage = rgb2ycbcr(inputImg);
-%imshow(ycbrImage);
+
     % Extract the Y, Cb, and Cr channels
     y = double(ycbrImage(:, :, 1));
     cb = double(ycbrImage(:, :, 2));
@@ -17,12 +16,9 @@ function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
     skinMask = (y >= skinyRange(1) & y <= skinyRange(2)) & ...
                (cb >= skincbRange(1) & cb <= skincbRange(2)) & ...
                (cr >= skincrRange(1) & cr <= skincrRange(2));
-    
-    avg = mean(skinMask(:));
-        avg2 = mean(cr(:));
 
-        avg3 = mean(cb(:));
-                avg4 = mean(y(:));
+    % Check average values and adjust the mask if needed
+    avg = mean(skinMask(:));
 
     if (avg > 0.7 && avg < 0.78)
         skinMask = (y >= 160/255 & y <= skinyRange(2)) & ...
@@ -30,8 +26,6 @@ function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
                    (cr >= skincrRange(1) & cr <= skincrRange(2));
     end
 
-    %imshow(skinMask);
-    
     % Perform morphological operations to refine the mask
     se = strel('disk', 2);
     skinMask = imopen(skinMask, se);
@@ -43,13 +37,13 @@ function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
 
     binary_img = double(skinMask);
 
-    %imshow(binary_img);
-
+    % Further image processing steps
     binaryImg = imfill(binary_img, 'holes');
     target = 1:-0.01:0;
     binaryImg = histeq(binaryImg, target);
     binaryImg = imbinarize(binaryImg, 0.7);
 
+    % Perform blob analysis
     stats = regionprops(binaryImg, 'Area', 'Centroid', 'Eccentricity');
 
     areas = [stats.Area];
@@ -75,12 +69,13 @@ function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
 
     binaryImg = ismember(bwlabel(binaryImg), selectedBlobIndex);
 
+    % Perform closing and hole filling
     se = strel('disk', 3);
     binaryImg = imclose(binaryImg, se);
     FaceSeg = imfill(binaryImg, 'holes');
 
+    % Find the vertical extent of the segmented face
     [rows, ~] = find(FaceSeg == 1);
     yMin = min(rows);
     yMax = max(rows);
-
 end
