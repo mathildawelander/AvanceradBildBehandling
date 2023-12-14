@@ -23,7 +23,8 @@ function [outputIMG] = mouthMap(inputIMG, faceSeg)
 
     % Check if the detected mouth region is valid using the face segmentation
     if getMouth(MouthMap.*faceSeg) == -1
-        % If the detected mouth is invalid, use the original mouth map
+        % If the detected mouth is invalid, use the original mouth map that
+        % is not thresholded
         mouthImg = mouthMap.*faceSeg;
         mouthImg = mouthImg / max(mouthImg(:));
         mouthImg = mouthImg > 0.5;

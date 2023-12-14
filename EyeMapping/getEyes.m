@@ -36,16 +36,26 @@ function [eyePos] = getEyes(img, mouthImg, topBoundary, il, co)
                 % Calculate the distance between centroids
                 eyeDist = pdist([region1.Centroid; region2.Centroid]);
 
-                % Check if distance is within the specified range (80-150 pixels)
+                % Check if distance is within the specified range (80-180 pixels)
                 if eyeDist >= 80 && eyeDist <= 180
                     % Calculate the angle with the horizontal
                     angle = calculateAngle(region1.Centroid, region2.Centroid);
 
-                    % Check if the angle is within ±5 degrees of horizontal
+                    % Check if the angle is within ±7.3 degrees of horizontal
                     if isHorizontalAngle(angle)
-                        if isMouthAligned(mouthPos, region1.Centroid, region2.Centroid)
-                            selectedRegions = [region1, region2];
-                            break; % Exit the loop once a valid pair is found
+                        % Check if mouth is correctly aligned with the eyes
+                         if mouthPos~= -1
+                           if mouthPos(1) > min(region1.Centroid(1), region2.Centroid(1)) && ...
+                              mouthPos(1) < max(region1.Centroid(1), region2.Centroid(1))
+                                selectedRegions = [region1, region2];
+                                break; % Exit the loop once a valid pair is found                    
+                           elseif ~exist('tempRegions', 'var')
+                                tempRegions= [region1, region2];
+                           end
+
+                        end
+                        if ~exist('tempRegions', 'var')
+                            tempRegions= [region1, region2];
                         end
                     end
                 end
@@ -60,6 +70,9 @@ function [eyePos] = getEyes(img, mouthImg, topBoundary, il, co)
     if exist('selectedRegions', 'var')
         eyePos(1, :) = selectedRegions(1).Centroid;
         eyePos(2, :) = selectedRegions(2).Centroid;
+    elseif exist('tempRegions', 'var')
+       eyePos(1, :) = tempRegions(1).Centroid;
+       eyePos(2, :) = tempRegions(2).Centroid;
     else
         % If no valid pair is found, try alternative methods
         if ~isempty(il)
@@ -69,7 +82,6 @@ function [eyePos] = getEyes(img, mouthImg, topBoundary, il, co)
             eyePos = getEyes(co, mouthImg, topBoundary, [], []);
         else
             eyePos=-1;
-            disp('No valid eyes found');
         end
     end
 end
@@ -95,18 +107,6 @@ end
 function isHorizontal = isHorizontalAngle(angle)
     % Check if the angle is within ±7.3 degrees of horizontal
     isHorizontal = angle <= 7.3 || abs(angle - 180) <= 7.3;
-end
-
-function aligned = isMouthAligned(mouthPos, centroid1, centroid2)
-    % Check if the mouth is aligned with the detected regions
-    aligned= false;
-    if mouthPos~= -1
-        if mouthPos(1) > min(centroid1(1), centroid2(1)) && ...
-            mouthPos(1) < max(centroid1(1), centroid2(1))
-            aligned=true;         
-         end
-
-     end
 end
 
 function img = preprocessAndFillHoles(co)

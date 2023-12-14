@@ -17,7 +17,6 @@ function [processed_image] = CropImages(input_image, left_eye_pos, right_eye_pos
     % Calculate the translation vector
     translation_x = desired_left_eye_pos(1) - (scaling_factor * left_eye_pos(1) * cos(angle)) + scaling_factor * left_eye_pos(2) * sin(angle);
     translation_y = desired_left_eye_pos(2) - (scaling_factor * left_eye_pos(1) * sin(angle)) - scaling_factor * left_eye_pos(2) * cos(angle);
-    translation_vector = [translation_x, translation_y];
 
     affine_matrix = [scaling_factor * cos(angle), scaling_factor * sin(angle), 0; ...
                      -scaling_factor * sin(angle), scaling_factor * cos(angle), 0; ...
@@ -27,13 +26,11 @@ function [processed_image] = CropImages(input_image, left_eye_pos, right_eye_pos
     affine_transform = affine2d(affine_matrix);
 
     % Apply the affine transformation to the image
-    % Specify the output size and the fill value
     output_size = desired_size;
-    fill_value = 0; % or any other value you want
+    fill_value = 0;
     transformed_image = imwarp(input_image, affine_transform, 'OutputView', imref2d(output_size), 'FillValues', fill_value);
 
     % Crop the image
-    % No need to change this part
     crop_x = desired_left_eye_pos(1) - desired_left_eye_pos(1);
     crop_y = desired_left_eye_pos(2) - desired_left_eye_pos(2);
     crop_rectangle = [crop_x, crop_y, desired_size(2), desired_size(1)];

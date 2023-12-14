@@ -16,14 +16,20 @@ function id = tnm034(im)
     % Calculate the threshold for eye detection
     threshold = lowerBoundary - (0.8 * (lowerBoundary - topBoundary));
 
-    % Generate hybrid image
-    [imgHybrid, ed, il, co] = eyeMap(face, faceSeg);
+    % Generate eye map
+    [eyeImg, ~, il, co] = eyeMap(face, faceSeg);
 
     % Generate mouth map for mouth detection
     mouthImg = mouthMap(face, faceSeg);
 
     % Get the positions of the eyes
-    eyePos = getEyes(imgHybrid, mouthImg, threshold, il, co);
+    eyePos = getEyes(eyeImg, mouthImg, threshold, il, co);
+
+    if(eyePos == -1) 
+        disp('Could not detect eyes, quitting program')
+        id = -1;
+        return;
+    end
 
     % Determine the positions of the left and right eyes
     if (eyePos(1, 1) < eyePos(2, 1))

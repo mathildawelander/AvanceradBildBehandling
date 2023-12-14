@@ -19,6 +19,5 @@ function [mouthPos] = getMouth(img)
     else
         % If no valid region is found, set mouthPos to -1 and display a message
         mouthPos = -1;
-        disp('No mouth');
     end
 end

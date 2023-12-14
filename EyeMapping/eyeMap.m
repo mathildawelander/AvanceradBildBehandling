@@ -1,4 +1,4 @@
-function [imgHybrid,ed,il,co] = eyeMap(face,faceSeg)
+function [eyeImg,ed,il,co] = eyeMap(face,faceSeg)
     %Do the 3 different methods
     co= ColorBasedMethod(face, (50/255));
     ed= edgeDensityMethod(face,1, faceSeg);
@@ -8,7 +8,6 @@ function [imgHybrid,ed,il,co] = eyeMap(face,faceSeg)
     imgcoed= co & ed;
     imgiled= il & ed;
     %Get the final result 
-    imgHybrid= imgilco | imgcoed | imgiled;
-    imgHybrid= faceSeg.*imgHybrid;
-
+    eyeImg= imgilco | imgcoed | imgiled;
+    eyeImg= faceSeg.*eyeImg;
 end

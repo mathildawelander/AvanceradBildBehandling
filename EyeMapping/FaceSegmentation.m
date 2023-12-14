@@ -57,9 +57,12 @@ function [FaceSeg, yMin, yMax] = FaceSegmentation(inputImg)
     largeBlobsIndices = find(areas > 50000);
 
     if isempty(largeBlobsIndices)
-        disp('No blobs larger than 50,000 pixels found.');
+        % Could not find face, returns a skinmask covering the whole image
+        FaceSeg = ones(size(inputImg, 1), size(inputImg, 2));
+        yMin = 1;
+        yMax = size(inputImg, 1);
         return;
-    end
+   end
 
     % Find the index of the blob with the smallest distance from the center
     [~, idxMinDistance] = min(distances(largeBlobsIndices));
